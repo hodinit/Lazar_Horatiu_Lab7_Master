@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../GrpcCustomersService/GrpcCustomersService.csproj" Id="e6c7a119-4999-45ec-bc98-ee737110bc26" />
   <Project Path="Lazar_Horatiu_Lab2_Master.csproj" />
 </Solution>
