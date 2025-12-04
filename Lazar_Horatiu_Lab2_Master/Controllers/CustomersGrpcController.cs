@@ -62,5 +62,51 @@ namespace Lazar_Horatiu_Lab2_Master.Controllers
             });
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult Update(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var client = new CustomerService.CustomerServiceClient(channel);
+            Customer grpcCustomer = client.Get(new CustomerId() { Id = (int)id });
+            if (grpcCustomer == null)
+            {
+                return NotFound();
+            }
+
+            var modelCustomer = new Lazar_Horatiu_Lab2_Master.Models.Customer
+            {
+                CustomerID = grpcCustomer.CustomerId,
+                Name = grpcCustomer.Name,
+                Adress = grpcCustomer.Adress,
+                BirthDate = DateTime.Parse(grpcCustomer.Birthdate)
+            };
+
+            return View(modelCustomer);
+        }
+
+        [HttpPost]
+        public IActionResult Update(Lazar_Horatiu_Lab2_Master.Models.Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                var client = new CustomerService.CustomerServiceClient(channel);
+
+                var grpcCustomer = new Customer
+                {
+                    CustomerId = customer.CustomerID,
+                    Name = customer.Name,
+                    Adress = customer.Adress,
+                    Birthdate = customer.BirthDate.ToString("yyyy-MM-dd")
+                };
+
+                client.Update(grpcCustomer);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(customer);
+        }
     }
 }
